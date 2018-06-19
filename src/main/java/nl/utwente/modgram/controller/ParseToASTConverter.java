@@ -2,18 +2,39 @@ package nl.utwente.modgram.controller;
 
 import nl.utwente.modgram.ModGramBaseVisitor;
 import nl.utwente.modgram.ModGramParser;
+import nl.utwente.modgram.model.ImportRule;
+import nl.utwente.modgram.model.Module;
+import nl.utwente.modgram.model.Rule;
+
+import java.util.ArrayList;
 
 public class ParseToASTConverter extends ModGramBaseVisitor {
 
     @Override
     public Object visitGram(ModGramParser.GramContext ctx) {
-        return super.visitGram(ctx);
+        ArrayList<Module> modules = new ArrayList<>();
+        for (ModGramParser.ModuleContext modctx : ctx.module()) {
+            modules.add((Module) this.visitModule(modctx));
+        }
+        return modules;
     }
 
     @Override
     public Object visitModule(ModGramParser.ModuleContext ctx) {
-        System.out.println("MOD");
-        return super.visitModule(ctx);
+        Module module = new Module(ctx.LC_NAME(0).getText());
+        for (int i = 1; i < ctx.LC_NAME().size(); i++) {
+            module.addDependency(ctx.LC_NAME(i).getText());
+        }
+
+        for (int i = 0; i < ctx.gram_rule().size(); i++) {
+            Object rule = this.visit(ctx.gram_rule(i));
+            if (rule instanceof ImportRule) {
+                module.addImportRule((ImportRule) rule);
+            } else {
+                module.addGrammarRule((Rule) rule);
+            }
+        }
+        return module;
     }
 
     @Override

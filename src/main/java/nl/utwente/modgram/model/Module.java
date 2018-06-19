@@ -6,14 +6,12 @@ import java.util.HashSet;
 
 public class Module {
 
-    private ModularGrammar modularGrammar;
     private String name;
     private HashSet<String> dependencies = new HashSet<>();
     private ArrayList<ImportRule> importRules = new ArrayList<>();
     private HashMap<String, Rule> grammarRules = new HashMap<>();
 
-    public Module(ModularGrammar modularGrammar, String name) {
-        this.modularGrammar = modularGrammar;
+    public Module(String name) {
         this.name = name;
     }
 

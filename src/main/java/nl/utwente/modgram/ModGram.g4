@@ -27,7 +27,6 @@ regexp : LC_NAME        #regexpNonTerm
        | '|'            #regexpOr
        ;
 
-NUMBER: [0123456789]+;
 LC_NAME: [a-z] [a-z_0-9]*;
 UC_NAME: [A-Z] [A-Z_0-9]*;
 STRING: '\'' ('\\'. | ~('\''|'\\'))* '\'';

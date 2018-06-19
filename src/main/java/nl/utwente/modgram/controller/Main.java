@@ -26,10 +26,6 @@ public class Main {
             try {
                 CharStream charstream = CharStreams.fromFileName(args[i]);
                 ModGramLexer lexer = new ModGramLexer(charstream);
-//                for (Token token : lexer.getAllTokens()) {
-//                    System.out.print(token.toString() + " ");
-//                    System.out.println(token.getType() == Token.INVALID_TYPE);
-//                }
                 TokenStream tokenStream = new CommonTokenStream(lexer);
                 ModGramParser parser = new ModGramParser(tokenStream);
                 ParseTree parseTree = parser.gram();
