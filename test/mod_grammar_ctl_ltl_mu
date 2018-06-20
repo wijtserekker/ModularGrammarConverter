@@ -1,11 +1,11 @@
 module main ;
 using ctl ;
 using ltl ;
-using mu ;
+using mucalc ;
 
 expr <= ctl.expr ;
 expr <= ltl.expr ;
-expr <= mu.expr ;
+expr <= mucalc.expr ;
 
 
 
@@ -32,6 +32,7 @@ EDGE_ALL_RIGHT   ::= ']' ;
 NEXT  ::= 'X' ;
 EXIST ::= 'E' ;
 ALL   ::= 'A' ;
+DOT   ::= '.' ;
 
 
 
@@ -48,11 +49,14 @@ expr ::= be.EXTRA_ATOM
      | FUTURE expr
      | NEXT expr
      | expr UNTIL expr
-     | bexpr
      ;
 
-bexpr <= be.expr ;
-
+EXIST ::= 'E' ;
+ALL   ::= 'A' ;
+GLOBALLY ::= 'G' ;
+FUTURE ::= 'F' ;
+NEXT  ::= 'X' ;
+UNTIL ::= 'U' ;
 
 
 module ltl ;

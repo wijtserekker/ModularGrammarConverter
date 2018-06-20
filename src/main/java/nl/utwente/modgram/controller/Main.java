@@ -4,23 +4,30 @@ import nl.utwente.modgram.ModGramLexer;
 import nl.utwente.modgram.ModGramParser;
 import nl.utwente.modgram.model.ModularGrammar;
 import nl.utwente.modgram.model.Module;
+import org.antlr.v4.misc.Graph;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Main {
 
     public static void main(String[] args) {
+        // Usage checking
         if (args.length < 2) {
-            System.out.println("USAGE: <file> [file2 file3 ...] <module>.<non-term>\n" +
-                    "- Where:\n" +
-                    "    file:     A file containing on or more grammar modules\n" +
-                    "    module:   The module containing the start non-terminal\n" +
-                    "    non-term: The start non-terminal of the modular grammar");
+            printUsage();
             return;
         }
+        String[] splitLastArg = args[args.length-1].split("\\."); // '\\' to escape the dot as wildcard in regex
+        if (splitLastArg.length != 2) {
+            printUsage();
+            return;
+        }
+
+        String mainModule = splitLastArg[0];
+        String mainRule = splitLastArg[1];
 
         //Parsing and loading modules
         ArrayList<Module> modules = new ArrayList<>();
@@ -43,7 +50,47 @@ public class Main {
         for (Module module : modules)
             grammar.addModule(module);
 
-        System.out.println("DONE");
 
+        // Error checking
+        if (grammar.getModule(mainModule) == null) {
+            System.err.println("Given main module '" + mainModule + "' does not exist!");
+            return;
+        }
+        if (grammar.getModule(mainModule).getGrammarRule(mainRule) == null
+                && !grammar.getModule(mainModule).containsImportRuleWithLHS(mainRule)) {
+            System.err.println("Given start non-terminal '" + mainModule + "." + mainRule + "' does not exist!");
+            return;
+        }
+
+        // Check usage errors
+        ArrayList<String> usageErrors = new UsageChecker().checkUsageGrammar(grammar);
+        if (usageErrors.size() > 0) {
+            for (String error : usageErrors)
+                System.err.println(error);
+            return;
+        }
+
+
+        // Creating dependency graph
+        Graph<String> dependencyGraph = DependencyGraphBuilder.buildDependencyGraph(grammar);
+
+        // Error checking (Is dependency graph cyclic?)
+        if (DependencyGraphBuilder.graphIsCyclic(dependencyGraph, dependencyGraph.getNode(mainModule))) {
+            System.err.println("The specified grammar contains cyclic module dependencies! This is not supported.");
+            return;
+        }
+
+
+        ArrayList<String> sortedNodes = new ArrayList<>();
+        dependencyGraph.DFS(dependencyGraph.getNode(mainModule), new HashSet<>(), sortedNodes);
+        System.out.println(sortedNodes.toString());
+    }
+
+    private static void printUsage() {
+        System.out.println("USAGE: <file> [file2 file3 ...] <module>.<non-term>\n" +
+                "- Where:\n" +
+                "    file:     A file containing on or more grammar modules\n" +
+                "    module:   The module containing the start non-terminal\n" +
+                "    non-term: The start non-terminal of the modular grammar");
     }
 }

@@ -14,8 +14,8 @@ public class ParseToASTConverter extends ModGramBaseVisitor {
     @Override
     public Object visitGram(ModGramParser.GramContext ctx) {
         ArrayList<Module> modules = new ArrayList<>();
-        for (ModGramParser.ModuleContext modctx : ctx.module()) {
-            modules.add((Module) this.visitModule(modctx));
+        for (int i = 0; i < ctx.module().size(); i++) {
+            modules.add((Module) this.visitModule(ctx.module(i)));
         }
         return modules;
     }
@@ -66,7 +66,7 @@ public class ParseToASTConverter extends ModGramBaseVisitor {
         String leftHandSide = (String) this.visitLeft_hand_side(ctx.left_hand_side(0));
         String moduleName = ctx.LC_NAME().getText();
         String ruleName = (String) this.visitLeft_hand_side(ctx.left_hand_side(1));
-        return new ImportRule(ImportRule.Type.REFERENCE_RECURSIVE, leftHandSide, moduleName, ruleName);
+        return new ImportRule(ImportRule.Type.CLONE_RECURSIVE, leftHandSide, moduleName, ruleName);
     }
 
     @Override

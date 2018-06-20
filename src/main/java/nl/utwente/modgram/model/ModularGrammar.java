@@ -14,6 +14,10 @@ public class ModularGrammar {
         modules.put(module.getName(), module);
     }
 
+    public Module getModule(String name) {
+        return modules.get(name);
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -21,5 +25,9 @@ public class ModularGrammar {
             result.append(module.toString()).append("\n");
         }
         return result.toString();
+    }
+
+    public Iterable<? extends Module> getModules() {
+        return modules.values();
     }
 }

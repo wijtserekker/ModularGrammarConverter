@@ -1,0 +1,12 @@
+module a;
+using b;
+using c;
+
+test ::= 'test' ;
+
+module b;
+
+
+module c;
+using b;
+

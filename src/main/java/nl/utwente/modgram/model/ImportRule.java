@@ -3,18 +3,18 @@ package nl.utwente.modgram.model;
 public class ImportRule {
 
     public enum Type {
-        CLONE,
         REFERENCE,
-        REFERENCE_RECURSIVE;
+        CLONE,
+        CLONE_RECURSIVE;
 
         @Override
         public String toString() {
             switch (this) {
-                case CLONE:
-                    return "<-";
                 case REFERENCE:
+                    return "<-";
+                case CLONE:
                     return "<=";
-                case REFERENCE_RECURSIVE:
+                case CLONE_RECURSIVE:
                     return "<=*";
                 default:
                     return null; //Will never happen
