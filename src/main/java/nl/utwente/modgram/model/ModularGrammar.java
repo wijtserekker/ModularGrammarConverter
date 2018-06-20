@@ -14,4 +14,12 @@ public class ModularGrammar {
         modules.put(module.getName(), module);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (Module module : modules.values()) {
+            result.append(module.toString()).append("\n");
+        }
+        return result.toString();
+    }
 }

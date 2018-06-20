@@ -5,18 +5,30 @@ public class ImportRule {
     public enum Type {
         CLONE,
         REFERENCE,
-        REFERENCE_RECURSIVE
+        REFERENCE_RECURSIVE;
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case CLONE:
+                    return "<-";
+                case REFERENCE:
+                    return "<=";
+                case REFERENCE_RECURSIVE:
+                    return "<=*";
+                default:
+                    return null; //Will never happen
+            }
+        }
     }
 
     private Type type;
-    private Module module;
     private String localRule;
     private String importModule;
     private String importRule;
 
-    public ImportRule(Type type, Module module, String localRule, String importModule, String importRule) {
+    public ImportRule(Type type, String localRule, String importModule, String importRule) {
         this.type = type;
-        this.module = module;
         this.localRule = localRule;
         this.importModule = importModule;
         this.importRule = importRule;
@@ -24,10 +36,6 @@ public class ImportRule {
 
     public Type getType() {
         return type;
-    }
-
-    public Module getModule() {
-        return module;
     }
 
     public String getLocalRule() {
@@ -40,5 +48,10 @@ public class ImportRule {
 
     public String getImportRule() {
         return importRule;
+    }
+
+    @Override
+    public String toString() {
+        return localRule + " " + type.toString() + " " + importModule + "." + importRule;
     }
 }

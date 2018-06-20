@@ -7,7 +7,27 @@ public class Operator extends RHSElem {
         ZERO_OR_MORE,
         ZERO_OR_ONE,
         NOT,
-        OR
+        OR;
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case WILDCARD:
+                    return "$";
+                case ONE_OR_MORE:
+                    return "+";
+                case ZERO_OR_MORE:
+                    return "*";
+                case ZERO_OR_ONE:
+                    return "?";
+                case NOT:
+                    return "~";
+                case OR:
+                    return "|";
+                default:
+                    return null; //Will never happen
+            }
+        }
     }
 
     private Type type;

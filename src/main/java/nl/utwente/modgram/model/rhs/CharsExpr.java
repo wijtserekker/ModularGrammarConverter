@@ -11,4 +11,9 @@ public class CharsExpr extends RHSElem {
     public String getText() {
         return text;
     }
+
+    @Override
+    public String toString() {
+        return "[" + text + "]";
+    }
 }

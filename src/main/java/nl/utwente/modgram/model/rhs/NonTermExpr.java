@@ -4,17 +4,14 @@ public class NonTermExpr extends RHSElem {
 
     private String module;
     private String name;
-    private boolean isToken;
 
-    public NonTermExpr(String module, String name, boolean isToken) {
+    public NonTermExpr(String module, String name) {
         this.module = module;
         this.name = name;
-        this.isToken = isToken;
     }
 
-    public NonTermExpr(String name, boolean isToken) {
+    public NonTermExpr(String name) {
         this.name = name;
-        this.isToken = isToken;
     }
 
     public String getModule() {
@@ -25,7 +22,8 @@ public class NonTermExpr extends RHSElem {
         return name;
     }
 
-    public boolean isToken() {
-        return isToken;
+    @Override
+    public String toString() {
+        return (module == null ? "" : module + ".") + name;
     }
 }
