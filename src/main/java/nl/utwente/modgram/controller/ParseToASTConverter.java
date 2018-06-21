@@ -4,6 +4,7 @@ import nl.utwente.modgram.ModGramBaseVisitor;
 import nl.utwente.modgram.ModGramParser;
 import nl.utwente.modgram.model.ImportRule;
 import nl.utwente.modgram.model.Module;
+import nl.utwente.modgram.model.RemoveRule;
 import nl.utwente.modgram.model.Rule;
 import nl.utwente.modgram.model.rhs.*;
 
@@ -31,8 +32,10 @@ public class ParseToASTConverter extends ModGramBaseVisitor {
             Object rule = this.visit(ctx.gram_rule(i));
             if (rule instanceof ImportRule) {
                 module.addImportRule((ImportRule) rule);
-            } else {
+            } else if (rule instanceof Rule){
                 module.addGrammarRule((Rule) rule);
+            } else if (rule instanceof RemoveRule) {
+                module.addRemoveRule((RemoveRule) rule);
             }
         }
         return module;
@@ -67,6 +70,16 @@ public class ParseToASTConverter extends ModGramBaseVisitor {
         String moduleName = ctx.LC_NAME().getText();
         String ruleName = (String) this.visitLeft_hand_side(ctx.left_hand_side(1));
         return new ImportRule(ImportRule.Type.CLONE_RECURSIVE, leftHandSide, moduleName, ruleName);
+    }
+
+    @Override
+    public Object visitRuleRemove(ModGramParser.RuleRemoveContext ctx) {
+        String leftHandSide = (String) this.visitLeft_hand_side(ctx.left_hand_side());
+        ArrayList<RHSElem> righHandSide = new ArrayList<>();
+        for (int i = 0; i < ctx.right_hand_side().regexp().size(); i++) {
+            righHandSide.add((RHSElem) this.visit(ctx.right_hand_side().regexp(i)));
+        }
+        return new RemoveRule(leftHandSide, righHandSide);
     }
 
     @Override

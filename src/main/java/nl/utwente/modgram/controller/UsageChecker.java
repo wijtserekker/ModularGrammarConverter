@@ -1,9 +1,6 @@
 package nl.utwente.modgram.controller;
 
-import nl.utwente.modgram.model.ImportRule;
-import nl.utwente.modgram.model.ModularGrammar;
-import nl.utwente.modgram.model.Module;
-import nl.utwente.modgram.model.Rule;
+import nl.utwente.modgram.model.*;
 import nl.utwente.modgram.model.rhs.NonTermExpr;
 import nl.utwente.modgram.model.rhs.ParExpr;
 import nl.utwente.modgram.model.rhs.RHSElem;

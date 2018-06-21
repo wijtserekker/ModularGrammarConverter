@@ -8,6 +8,7 @@ gram_rule : left_hand_side '::=' right_hand_side             #ruleNormal
           | left_hand_side '<-' LC_NAME '.' left_hand_side   #ruleImportByReference
           | left_hand_side '<=' LC_NAME '.' left_hand_side   #ruleImportByClone
           | left_hand_side '<=*' LC_NAME '.' left_hand_side  #ruleImportByCloneRecursive
+          | left_hand_side ':/=' right_hand_side             #ruleRemove
           ;
 
 left_hand_side : LC_NAME | UC_NAME ;

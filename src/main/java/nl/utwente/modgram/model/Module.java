@@ -10,6 +10,7 @@ public class Module {
     private HashSet<String> dependencies = new HashSet<>();
     private ArrayList<ImportRule> importRules = new ArrayList<>();
     private HashMap<String, Rule> grammarRules = new HashMap<>();
+    private ArrayList<RemoveRule> removeRules = new ArrayList<>();
 
     public Module(String name) {
         this.name = name;
@@ -31,12 +32,12 @@ public class Module {
         grammarRules.put(rule.getLeftHandSide(), rule);
     }
 
-    public Rule getGrammarRule(String leftHandSide) {
-        return grammarRules.get(leftHandSide);
+    public void addRemoveRule(RemoveRule removeRule) {
+        removeRules.add(removeRule);
     }
 
-    public Iterable<? extends Rule> getGrammarRules() {
-        return grammarRules.values();
+    public Rule getGrammarRule(String leftHandSide) {
+        return grammarRules.get(leftHandSide);
     }
 
     public HashSet<String> getDependencies() {
@@ -45,6 +46,14 @@ public class Module {
 
     public ArrayList<ImportRule> getImportRules() {
         return importRules;
+    }
+
+    public Iterable<? extends Rule> getGrammarRules() {
+        return grammarRules.values();
+    }
+
+    public ArrayList<RemoveRule> getRemoveRules() {
+        return removeRules;
     }
 
     public boolean containsRule(String lhs) {
@@ -73,6 +82,9 @@ public class Module {
         }
         for (Rule rule : grammarRules.values()) {
             result.append(rule.toString()).append('\n');
+        }
+        for (RemoveRule removeRule : removeRules) {
+            result.append(removeRule.toString()).append('\n');
         }
         return result.toString();
     }
