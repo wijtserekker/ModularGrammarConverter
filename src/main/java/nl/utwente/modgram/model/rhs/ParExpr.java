@@ -28,4 +28,12 @@ public class ParExpr extends RHSElem {
         }
         return result.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ParExpr) {
+            return elems.equals(((ParExpr) o).elems);
+        }
+        return false;
+    }
 }

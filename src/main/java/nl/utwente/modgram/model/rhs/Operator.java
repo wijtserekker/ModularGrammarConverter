@@ -44,4 +44,12 @@ public class Operator extends RHSElem {
     public String toString() {
         return type.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Operator) {
+            return type == ((Operator) o).type;
+        }
+        return false;
+    }
 }

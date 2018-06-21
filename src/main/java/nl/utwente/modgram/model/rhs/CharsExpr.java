@@ -16,4 +16,12 @@ public class CharsExpr extends RHSElem {
     public String toString() {
         return "[" + text + "]";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof CharsExpr) {
+            return text.equals(((CharsExpr) o).text);
+        }
+        return false;
+    }
 }

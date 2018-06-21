@@ -16,4 +16,12 @@ public class StrExpr extends RHSElem {
     public String toString() {
         return "'" + text + "'";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof StrExpr) {
+            return text.equals(((StrExpr) o).text);
+        }
+        return false;
+    }
 }

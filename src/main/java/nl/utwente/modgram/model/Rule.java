@@ -41,6 +41,15 @@ public class Rule {
         return result.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Rule) {
+            Rule rule = (Rule) o;
+            return leftHandSide.equals(rule.leftHandSide) && rightHandSides.equals(rule.rightHandSides);
+        }
+        return false;
+    }
+
     private String arrayToString(ArrayList<RHSElem> array) {
         StringBuilder result = new StringBuilder();
         if (array.size() > 0) {

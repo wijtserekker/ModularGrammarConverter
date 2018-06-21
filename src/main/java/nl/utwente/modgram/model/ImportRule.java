@@ -54,4 +54,14 @@ public class ImportRule {
     public String toString() {
         return localRule + " " + type.toString() + " " + importModule + "." + importRule;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ImportRule) {
+            ImportRule rule = (ImportRule) o;
+            return type == rule.type && localRule.equals(rule.localRule) && importRule.equals(rule.importRule)
+                    && (importModule == null ? rule.importModule == null : importModule.equals(rule.importModule));
+        }
+        return false;
+    }
 }

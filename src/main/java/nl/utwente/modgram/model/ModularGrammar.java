@@ -1,5 +1,6 @@
 package nl.utwente.modgram.model;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 public class ModularGrammar {
@@ -27,7 +28,17 @@ public class ModularGrammar {
         return result.toString();
     }
 
-    public Iterable<? extends Module> getModules() {
+    public Collection<Module> getModules() {
         return modules.values();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ModularGrammar) {
+            ModularGrammar modularGrammar = (ModularGrammar) o;
+            return this.modules.values().containsAll(modularGrammar.getModules())
+                    && this.modules.values().size() == modularGrammar.getModules().size();
+        }
+        return false;
     }
 }

@@ -28,6 +28,15 @@ public class RemoveRule {
         return leftHandSide + " :/= " + arrayToString(righHandSide) + ";";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof RemoveRule) {
+            RemoveRule removeRule = (RemoveRule) o;
+            return leftHandSide.equals(removeRule.leftHandSide) && righHandSide.equals(removeRule.righHandSide);
+        }
+        return false;
+    }
+
     private String arrayToString(ArrayList<RHSElem> array) {
         StringBuilder result = new StringBuilder();
         if (array.size() > 0) {

@@ -16,7 +16,14 @@ public class ParseToASTConverter extends ModGramBaseVisitor {
     public Object visitGram(ModGramParser.GramContext ctx) {
         ArrayList<Module> modules = new ArrayList<>();
         for (int i = 0; i < ctx.module().size(); i++) {
-            modules.add((Module) this.visitModule(ctx.module(i)));
+            Module module = (Module) this.visitModule(ctx.module(i));
+            for (Module addedModule : modules) { // Check if module already exists
+                if (addedModule.getName().equals(module.getName())) {
+                    System.err.println("Module '" + module.getName() + "' is declared more than once!");
+                    System.exit(1);
+                }
+            }
+            modules.add(module);
         }
         return modules;
     }

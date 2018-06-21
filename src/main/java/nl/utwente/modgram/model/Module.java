@@ -1,6 +1,7 @@
 package nl.utwente.modgram.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -48,7 +49,7 @@ public class Module {
         return importRules;
     }
 
-    public Iterable<? extends Rule> getGrammarRules() {
+    public Collection<Rule> getGrammarRules() {
         return grammarRules.values();
     }
 
@@ -87,5 +88,18 @@ public class Module {
             result.append(removeRule.toString()).append('\n');
         }
         return result.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Module) {
+            Module module = (Module) o;
+            return name.equals(module.getName())
+                    && dependencies.containsAll(module.getDependencies()) && dependencies.size() == module.getDependencies().size()
+                    && importRules.containsAll(module.getImportRules()) && importRules.size() == module.getImportRules().size()
+                    && grammarRules.values().containsAll(module.getGrammarRules()) && grammarRules.values().size() == module.getGrammarRules().size()
+                    && removeRules.containsAll(module.getRemoveRules()) && removeRules.size() == module.getRemoveRules().size();
+        }
+        return false;
     }
 }
