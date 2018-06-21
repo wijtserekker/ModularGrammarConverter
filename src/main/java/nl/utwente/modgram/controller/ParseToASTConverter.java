@@ -60,7 +60,7 @@ public class ParseToASTConverter extends ModGramBaseVisitor {
         String leftHandSide = (String) this.visitLeft_hand_side(ctx.left_hand_side(0));
         String moduleName = ctx.LC_NAME().getText();
         String ruleName = (String) this.visitLeft_hand_side(ctx.left_hand_side(1));
-        return new ImportRule(ImportRule.Type.REFERENCE, leftHandSide, moduleName, ruleName);
+        return new ImportRule(ImportRule.Type.REFERENCE, leftHandSide, moduleName, ruleName, false);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ParseToASTConverter extends ModGramBaseVisitor {
         String leftHandSide = (String) this.visitLeft_hand_side(ctx.left_hand_side(0));
         String moduleName = ctx.LC_NAME().getText();
         String ruleName = (String) this.visitLeft_hand_side(ctx.left_hand_side(1));
-        return new ImportRule(ImportRule.Type.CLONE, leftHandSide, moduleName, ruleName);
+        return new ImportRule(ImportRule.Type.CLONE, leftHandSide, moduleName, ruleName, false);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class ParseToASTConverter extends ModGramBaseVisitor {
         String leftHandSide = (String) this.visitLeft_hand_side(ctx.left_hand_side(0));
         String moduleName = ctx.LC_NAME().getText();
         String ruleName = (String) this.visitLeft_hand_side(ctx.left_hand_side(1));
-        return new ImportRule(ImportRule.Type.CLONE_RECURSIVE, leftHandSide, moduleName, ruleName);
+        return new ImportRule(ImportRule.Type.CLONE_RECURSIVE, leftHandSide, moduleName, ruleName, false);
     }
 
     @Override

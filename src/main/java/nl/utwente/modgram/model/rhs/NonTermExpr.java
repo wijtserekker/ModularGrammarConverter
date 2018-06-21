@@ -1,5 +1,7 @@
 package nl.utwente.modgram.model.rhs;
 
+import java.util.Objects;
+
 public class NonTermExpr extends RHSElem {
 
     private String module;
@@ -22,6 +24,10 @@ public class NonTermExpr extends RHSElem {
         return name;
     }
 
+    public void setModule(String module) {
+
+    }
+
     @Override
     public String toString() {
         return (module == null ? "" : module + ".") + name;
@@ -35,5 +41,10 @@ public class NonTermExpr extends RHSElem {
                     && (module == null ? nonTermExpr.module == null : module.equals(nonTermExpr.module));
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(module, name);
     }
 }

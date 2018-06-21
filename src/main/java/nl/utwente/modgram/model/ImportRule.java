@@ -26,12 +26,14 @@ public class ImportRule {
     private String localRule;
     private String importModule;
     private String importRule;
+    private boolean induced;
 
-    public ImportRule(Type type, String localRule, String importModule, String importRule) {
+    public ImportRule(Type type, String localRule, String importModule, String importRule, boolean induced) {
         this.type = type;
         this.localRule = localRule;
         this.importModule = importModule;
         this.importRule = importRule;
+        this.induced = induced;
     }
 
     public Type getType() {
@@ -48,6 +50,10 @@ public class ImportRule {
 
     public String getImportRule() {
         return importRule;
+    }
+
+    public boolean isInduced() {
+        return induced;
     }
 
     @Override
