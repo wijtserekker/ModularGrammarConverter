@@ -80,10 +80,15 @@ public class Main {
             return;
         }
 
-
+        // Determine the order of the modules of which the import rules must be resolved
         ArrayList<String> sortedNodes = new ArrayList<>();
         dependencyGraph.DFS(dependencyGraph.getNode(mainModule), new HashSet<>(), sortedNodes);
-        System.out.println(sortedNodes.toString());
+
+        // Resolve import rules
+        ImportResolver.resolveImports(grammar, sortedNodes);
+
+        // Export to regular grammar file
+        System.out.println(grammar.toString());
     }
 
     private static void printUsage() {

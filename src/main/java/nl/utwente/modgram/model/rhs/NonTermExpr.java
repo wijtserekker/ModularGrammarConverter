@@ -25,7 +25,7 @@ public class NonTermExpr extends RHSElem {
     }
 
     public void setModule(String module) {
-
+        this.module = module;
     }
 
     @Override

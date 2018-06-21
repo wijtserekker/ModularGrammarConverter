@@ -143,6 +143,7 @@ public class ImportResolver {
             if (!removed)
                 System.out.println("Warning: rule '" + removeRule.toString() + "' did not remove any productions.");
         }
+        module.getRemoveRules().clear();
     }
 
 }
