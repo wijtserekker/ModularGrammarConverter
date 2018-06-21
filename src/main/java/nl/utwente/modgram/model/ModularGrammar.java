@@ -1,11 +1,11 @@
 package nl.utwente.modgram.model;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class ModularGrammar {
 
-    private HashMap<String, Module> modules = new HashMap<>();
+    private LinkedHashMap<String, Module> modules = new LinkedHashMap<>();
 
     public ModularGrammar() {
 

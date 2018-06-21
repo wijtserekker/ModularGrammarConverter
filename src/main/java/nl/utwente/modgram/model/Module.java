@@ -1,16 +1,13 @@
 package nl.utwente.modgram.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 public class Module {
 
     private String name;
     private HashSet<String> dependencies = new HashSet<>();
     private ArrayList<ImportRule> importRules = new ArrayList<>();
-    private HashMap<String, Rule> grammarRules = new HashMap<>();
+    private LinkedHashMap<String, Rule> grammarRules = new LinkedHashMap<>();
     private ArrayList<RemoveRule> removeRules = new ArrayList<>();
 
     public Module(String name) {
