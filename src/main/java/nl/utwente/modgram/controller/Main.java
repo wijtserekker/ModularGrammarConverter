@@ -2,25 +2,31 @@ package nl.utwente.modgram.controller;
 
 import nl.utwente.modgram.ModGramLexer;
 import nl.utwente.modgram.ModGramParser;
+import nl.utwente.modgram.controller.export.ANTLR4ExportModule;
+import nl.utwente.modgram.controller.export.ExportModule;
 import nl.utwente.modgram.model.ModularGrammar;
 import nl.utwente.modgram.model.Module;
 import org.antlr.v4.misc.Graph;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
         // Usage checking
-        if (args.length < 2) {
+        if (args.length < 3) {
             printUsage();
             return;
         }
-        String[] splitLastArg = args[args.length-1].split("\\."); // '\\' to escape the dot as wildcard in regex
+        String[] splitLastArg = args[args.length-2].split("\\."); // '\\' to escape the dot as wildcard in regex
         if (splitLastArg.length != 2) {
             printUsage();
             return;
@@ -31,7 +37,7 @@ public class Main {
 
         //Parsing and loading modules
         ArrayList<Module> modules = new ArrayList<>();
-        for (int i = 0; i < args.length-1; i++) {
+        for (int i = 0; i < args.length-2; i++) {
             try {
                 CharStream charstream = CharStreams.fromFileName(args[i]);
                 ModGramLexer lexer = new ModGramLexer(charstream);
@@ -88,14 +94,44 @@ public class Main {
         ImportResolver.resolveImports(grammar, sortedNodes);
 
         // Export to regular grammar file
-        System.out.println(grammar.toString());
+        Collections.reverse(sortedNodes);
+        ExportModule exportModule = new ANTLR4ExportModule();
+        String grammarName = args[args.length-1];
+
+        File exportFile = new File(grammarName + exportModule.getFileExtension());
+        if (exportFile.exists()) {
+//            System.out.print("Export file '" + grammarName + exportModule.getFileExtension() + "' already exists! Overwrite? [y/N]: ");
+//            Scanner scanner = new Scanner(System.in);
+//            String answer = scanner.nextLine().toLowerCase();
+//            scanner.close();
+//            if (!(answer.equals("yes") || answer.equals("y") || answer.equals("ye")))
+//                return;
+            if (!exportFile.delete()) {
+                System.out.println("Could not overwrite export file '" + grammarName + exportModule.getFileExtension() + "'!");
+                return;
+            }
+        }
+        try {
+            if (!exportFile.createNewFile()) {
+                System.out.println("Could not create export file '" + grammarName + exportModule.getFileExtension() + "'!");
+                return;
+            }
+            PrintWriter writer = new PrintWriter(exportFile);
+            writer.write(exportModule.exportGrammar(grammar, sortedNodes, grammarName));
+            writer.flush();
+            writer.close();
+            System.out.println("Successfully written modular grammar to '" + grammarName + exportModule.getFileExtension() + "'!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void printUsage() {
-        System.out.println("USAGE: <file> [file2 file3 ...] <module>.<non-term>\n" +
+        System.out.println("USAGE: <file> [file2 file3 ...] <module>.<non-term> <export-name>\n" +
                 "- Where:\n" +
-                "    file:     A file containing on or more grammar modules\n" +
-                "    module:   The module containing the start non-terminal\n" +
-                "    non-term: The start non-terminal of the modular grammar");
+                "    file:        A file containing on or more grammar modules\n" +
+                "    module:      The module containing the start non-terminal\n" +
+                "    non-term:    The start non-terminal of the modular grammar\n" +
+                "    export-name: The name of the export grammar");
     }
 }

@@ -28,6 +28,10 @@ public class NonTermExpr extends RHSElem {
         this.module = module;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return (module == null ? "" : module + ".") + name;

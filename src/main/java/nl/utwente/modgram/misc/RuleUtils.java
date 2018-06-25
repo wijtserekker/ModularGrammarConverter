@@ -94,4 +94,21 @@ public class RuleUtils {
                 rule.getRightHandSides().add(rhs);
     }
 
+    public static void replaceNontermRHSs(String importRule, String localRule, ArrayList<ArrayList<RHSElem>> rightHandSides) {
+        for (ArrayList<RHSElem> rhs : rightHandSides) {
+            replaceNontermRHS(importRule, localRule, rhs);
+        }
+    }
+
+    private static void replaceNontermRHS(String importRule, String localRule, ArrayList<RHSElem> rightHandSide) {
+        for (RHSElem rhsElem : rightHandSide) {
+            if (rhsElem instanceof NonTermExpr) {
+                NonTermExpr nonTerm = (NonTermExpr) rhsElem;
+                if (nonTerm.getModule() == null && nonTerm.getName().equals(importRule))
+                    nonTerm.setName(localRule);
+            } else if (rhsElem instanceof ParExpr) {
+                replaceNontermRHS(importRule, localRule, ((ParExpr) rhsElem).getElems());
+            }
+        }
+    }
 }

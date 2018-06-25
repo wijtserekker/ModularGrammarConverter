@@ -15,6 +15,8 @@ public class ImportResolver {
         for (String moduleName : order) {
             Module module = grammar.getModule(moduleName);
             resolveImportByCloneRecursive(module, grammar);
+            System.out.println("DEBUGG");
+            System.out.println(module.toString());
             resolveOtherImportRules(module, grammar);
             resolveRemoveRules(module, grammar);
         }
@@ -118,6 +120,8 @@ public class ImportResolver {
         ArrayList<ArrayList<RHSElem>> rightHandSides = RuleUtils.copyRightHandSides(importedRule.getRightHandSides());
         // If the CLONE rule was induced by a CLONE_RECURSIVE rule
         if (rule.isInduced()) {
+            // Replace all non terminals Y with X in the right hand sides where Y and X in X <= M.Y
+            RuleUtils.replaceNontermRHSs(rule.getImportRule(), rule.getLocalRule(), rightHandSides);
             // Change all the non-terminals M.X to X in the rightHandSides
             RuleUtils.changeAllImportedNonTermsToNormalNonTermsRHSs(rightHandSides);
         } else {
@@ -125,6 +129,8 @@ public class ImportResolver {
             RuleUtils.changeNormalNonTermsToImportedNonTermsRHSs(rightHandSides, rule.getImportModule());
             // Change only the non-terminals M.X to X in the rightHandSides where M and X are from the import rule X <= M.X
             RuleUtils.changeSelectImportedNonTermsToNormalNonTermsRHSs(rightHandSides, rule.getImportModule(), rule.getImportRule());
+            // Replace all non terminals Y with X in the right hand sides where Y and X in X <= M.Y
+            RuleUtils.replaceNontermRHSs(rule.getImportRule(), rule.getLocalRule(), rightHandSides);
         }
         // If a grammar rule with this non-terminal does not already exist
         if (module.getGrammarRule(rule.getLocalRule()) == null) {

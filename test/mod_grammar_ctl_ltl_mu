@@ -102,11 +102,11 @@ expr ::= LPAR expr RPAR
      ;
 
 bool_expr ::= BASIC_ATOM
-          | expr EQ expr
-          | expr NEQ expr
-          | expr AND expr
-          | expr OR expr
-          | NOT expr
+          | bool_expr EQ bool_expr
+          | bool_expr NEQ bool_expr
+          | bool_expr AND bool_expr
+          | bool_expr OR bool_expr
+          | NOT bool_expr
           ;
 
 BASIC_ATOM ::= VAR
@@ -120,7 +120,7 @@ EXTRA_ATOM ::= STRING
            | MAYBE
            ;
 
-STRING    ::= '\"' (~[\\\"] | '\\'$)* '\"' ;
+STRING    ::= '"' (~[\\"] | '\\'$)* '"' ;
 CHUNK     ::= '#' ([0-9a-fA-F] [0-9a-fA-F])* '#' ;
 NUMBER    ::= [0-9]+ ;
 TRUE      ::= 'true' ;
