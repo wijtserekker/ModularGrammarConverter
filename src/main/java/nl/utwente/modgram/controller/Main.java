@@ -4,8 +4,10 @@ import nl.utwente.modgram.ModGramLexer;
 import nl.utwente.modgram.ModGramParser;
 import nl.utwente.modgram.controller.export.ANTLR4ExportModule;
 import nl.utwente.modgram.controller.export.ExportModule;
+import nl.utwente.modgram.misc.ReachabilityChecker;
 import nl.utwente.modgram.model.ModularGrammar;
 import nl.utwente.modgram.model.Module;
+import nl.utwente.modgram.model.rhs.NonTermExpr;
 import org.antlr.v4.misc.Graph;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -13,10 +15,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -117,7 +116,9 @@ public class Main {
                 return;
             }
             PrintWriter writer = new PrintWriter(exportFile);
-            writer.write(exportModule.exportGrammar(grammar, sortedNodes, grammarName));
+            writer.write(exportModule.exportGrammar(grammar, sortedNodes,
+                    ReachabilityChecker.getReachableNonTerms(grammar, mainModule, mainRule),
+                    grammarName));
             writer.flush();
             writer.close();
             System.out.println("Successfully written modular grammar to '" + grammarName + exportModule.getFileExtension() + "'!");

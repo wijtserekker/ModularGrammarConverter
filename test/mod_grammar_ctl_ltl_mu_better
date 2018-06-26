@@ -1,0 +1,147 @@
+module main ;
+using ctl ;
+using ltl ;
+using mucalc ;
+
+expr ::= ctl.expr
+     | ltl.expr
+     | mucalc.expr
+     ;
+
+
+
+
+module mucalc ;
+using be ;
+
+expr <= be.bool_expr ;
+expr ::= MU be.VAR DOT expr
+     | NU be.VAR DOT expr
+     | EDGE_EXIST_LEFT be.VAR EDGE_EXIST_RIGHT expr
+     | EDGE_ALL_LEFT be.VAR EDGE_ALL_RIGHT expr
+     | NEXT expr
+     | EXIST expr
+     | ALL expr
+     | be.pred_expr
+     ;
+
+MU ::= 'mu' ;
+NU ::= 'nu' ;
+EDGE_EXIST_LEFT  ::= '<' ;
+EDGE_EXIST_RIGHT ::= '>' ;
+EDGE_ALL_LEFT    ::= '[' ;
+EDGE_ALL_RIGHT   ::= ']' ;
+NEXT  ::= 'X' ;
+EXIST ::= 'E' ;
+ALL   ::= 'A' ;
+DOT   ::= '.' ;
+
+
+
+
+module ctl ;
+using be ;
+
+expr <= be.bool_expr ;
+expr <= be.bool_expr_extra ;
+expr ::= EXIST expr
+     | ALL expr
+     | GLOBALLY expr
+     | FUTURE expr
+     | NEXT expr
+     | expr UNTIL expr
+     | be.pred_expr
+     ;
+
+EXIST ::= 'E' ;
+ALL   ::= 'A' ;
+GLOBALLY ::= 'G' ;
+FUTURE ::= 'F' ;
+NEXT  ::= 'X' ;
+UNTIL ::= 'U' ;
+
+
+module ltl ;
+using be ;
+
+expr <= be.bool_expr ;
+expr <= be.bool_expr_extra ;
+expr ::= GLOBALLY expr
+     | FUTURE expr
+     | NEXT expr
+     | expr UNTIL expr
+     | expr WEAK_UNTIL expr
+     | expr RELEASE expr
+     ;
+
+GLOBALLY   ::= '[]' ;
+FUTURE     ::= '<>' ;
+NEXT       ::= 'X' ;
+UNTIL      ::= 'U' ;
+WEAK_UNTIL ::= 'W' ;
+RELEASE    ::= 'R' ;
+
+
+
+
+
+module be ;
+
+pred_expr ::= VAR
+            | NUMBER
+            | STRING
+            | CHUNK
+            | MAYBE
+            | LPAR pred_expr RPAR
+            | pred_expr EQ pred_expr
+            | pred_expr NEQ pred_expr
+            | pred_expr MULT pred_expr
+            | pred_expr DIV pred_expr
+            | pred_expr REM pred_expr
+            | pred_expr ADD pred_expr
+            | pred_expr SUB pred_expr
+            | pred_expr LT pred_expr
+            | pred_expr LEQ pred_expr
+            | pred_expr GT pred_expr
+            | pred_expr GEQ pred_expr
+            | pred_expr EN pred_expr
+            ;
+
+bool_expr ::= bool_expr AND bool_expr
+          | bool_expr OR bool_expr
+          | NOT bool_expr
+          | TRUE
+          | FALSE
+          ;
+
+bool_expr_extra ::= bool_expr_extra EQUIV bool_expr_extra
+                 | bool_expr_extra IMPLY bool_expr_extra
+                 ;
+
+STRING    ::= '"' (~[\\"] | '\\'$)* '"' ;
+CHUNK     ::= '#' ([0-9a-fA-F] [0-9a-fA-F])* '#' ;
+NUMBER    ::= [0-9]+ ;
+TRUE      ::= 'true' ;
+FALSE     ::= 'false' ;
+MAYBE     ::= 'maybe' ;
+VAR       ::= '_'* ([a-zA-Z] | '\\'$) ([a-zA-Z0-9_'] | '\\'$)* ;
+
+LPAR  ::= '(' ;
+RPAR  ::= ')' ;
+MULT  ::= '*' ;
+DIV   ::= '/' ;
+REM   ::= '%' ;
+ADD   ::= '+' ;
+SUB   ::= '-' ;
+LT    ::= '<' ;
+LEQ   ::= '<=' ;
+GT    ::= '>' ;
+GEQ   ::= '>=' ;
+EQ    ::= '==' ;
+NEQ   ::= '!=' ;
+EN    ::= '??' ;
+NOT   ::= '!' ;
+AND   ::= '&&' ;
+OR    ::= '||' ;
+EQUIV ::= '->' ;
+IMPLY ::= '<->' ;

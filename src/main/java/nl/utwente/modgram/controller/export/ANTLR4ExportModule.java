@@ -7,14 +7,16 @@ import nl.utwente.modgram.model.rhs.*;
 
 import java.nio.CharBuffer;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class ANTLR4ExportModule implements ExportModule {
     @Override
-    public String exportGrammar(ModularGrammar grammar, ArrayList<String> moduleNames, String grammarName) {
+    public String exportGrammar(ModularGrammar grammar, ArrayList<String> moduleNames,
+                                HashSet<NonTermExpr> reachableNonTerms, String grammarName) {
         StringBuilder result = new StringBuilder();
         result.append("grammar ").append(grammarName).append(";\n\n");
         for (String moduleName : moduleNames) {
-            result.append(exportModule(grammar.getModule(moduleName))).append('\n');
+            result.append(exportModule(grammar.getModule(moduleName), reachableNonTerms)).append('\n');
         }
         return result.toString();
     }
@@ -24,10 +26,11 @@ public class ANTLR4ExportModule implements ExportModule {
         return ".g4";
     }
 
-    private String exportModule(Module module) {
+    private String exportModule(Module module, HashSet<NonTermExpr> reachableNonTerms) {
         StringBuilder result = new StringBuilder();
         for (Rule rule : module.getGrammarRules()) {
-            result.append(exportRule(rule, module.getName())).append('\n');
+            if (reachableNonTerms.contains(new NonTermExpr(module.getName(), rule.getLeftHandSide())))
+                result.append(exportRule(rule, module.getName())).append('\n');
         }
         return result.toString();
     }

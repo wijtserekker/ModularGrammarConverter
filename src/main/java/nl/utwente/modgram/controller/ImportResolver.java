@@ -15,8 +15,6 @@ public class ImportResolver {
         for (String moduleName : order) {
             Module module = grammar.getModule(moduleName);
             resolveImportByCloneRecursive(module, grammar);
-            System.out.println("DEBUGG");
-            System.out.println(module.toString());
             resolveOtherImportRules(module, grammar);
             resolveRemoveRules(module, grammar);
         }
