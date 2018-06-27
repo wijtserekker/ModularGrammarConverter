@@ -12,17 +12,18 @@ expr ::= ctl.expr
 
 
 module mucalc ;
-using be ;
+using pred ;
+using bool ;
 
-expr <= be.bool_expr ;
-expr ::= MU be.VAR DOT expr
-     | NU be.VAR DOT expr
-     | EDGE_EXIST_LEFT be.VAR EDGE_EXIST_RIGHT expr
-     | EDGE_ALL_LEFT be.VAR EDGE_ALL_RIGHT expr
-     | NEXT expr
-     | EXIST expr
-     | ALL expr
-     | be.pred_expr
+expr <= bool.expr ;
+expr ::= MU pred.VAR DOT expr
+     | NU pred.VAR DOT expr
+     | EDGE_EXIST_LEFT pred.VAR EDGE_EXIST_RIGHT expr
+     | EDGE_ALL_LEFT pred.VAR EDGE_ALL_RIGHT expr
+     | bool.NEXT expr
+     | bool.EXIST expr
+     | bool.ALL expr
+     | pred.expr
      ;
 
 MU ::= 'mu' ;
@@ -31,53 +32,47 @@ EDGE_EXIST_LEFT  ::= '<' ;
 EDGE_EXIST_RIGHT ::= '>' ;
 EDGE_ALL_LEFT    ::= '[' ;
 EDGE_ALL_RIGHT   ::= ']' ;
-NEXT  ::= 'X' ;
-EXIST ::= 'E' ;
-ALL   ::= 'A' ;
 DOT   ::= '.' ;
 
 
 
 
 module ctl ;
-using be ;
+using bool ;
+using pred ;
 
-expr <= be.bool_expr ;
-expr <= be.bool_expr_extra ;
-expr ::= EXIST expr
-     | ALL expr
+expr <= bool.expr ;
+expr <= bool.expr_extra ;
+expr ::= bool.EXIST expr
+     | bool.ALL expr
      | GLOBALLY expr
      | FUTURE expr
-     | NEXT expr
-     | expr UNTIL expr
-     | be.pred_expr
+     | bool.NEXT expr
+     | expr bool.UNTIL expr
+     | pred.expr
      ;
 
-EXIST ::= 'E' ;
-ALL   ::= 'A' ;
 GLOBALLY ::= 'G' ;
 FUTURE ::= 'F' ;
-NEXT  ::= 'X' ;
-UNTIL ::= 'U' ;
 
 
 module ltl ;
-using be ;
+using pred ;
+using bool ;
 
-expr <= be.bool_expr ;
-expr <= be.bool_expr_extra ;
+expr <= bool.expr ;
+expr <= bool.expr_extra ;
 expr ::= GLOBALLY expr
      | FUTURE expr
-     | NEXT expr
-     | expr UNTIL expr
+     | bool.NEXT expr
+     | expr bool.UNTIL expr
      | expr WEAK_UNTIL expr
      | expr RELEASE expr
+     | pred.expr
      ;
 
 GLOBALLY   ::= '[]' ;
 FUTURE     ::= '<>' ;
-NEXT       ::= 'X' ;
-UNTIL      ::= 'U' ;
 WEAK_UNTIL ::= 'W' ;
 RELEASE    ::= 'R' ;
 
@@ -85,49 +80,36 @@ RELEASE    ::= 'R' ;
 
 
 
-module be ;
+module pred ;
+using bool ;
 
-pred_expr ::= VAR
-            | NUMBER
-            | STRING
-            | CHUNK
-            | MAYBE
-            | LPAR pred_expr RPAR
-            | pred_expr EQ pred_expr
-            | pred_expr NEQ pred_expr
-            | pred_expr MULT pred_expr
-            | pred_expr DIV pred_expr
-            | pred_expr REM pred_expr
-            | pred_expr ADD pred_expr
-            | pred_expr SUB pred_expr
-            | pred_expr LT pred_expr
-            | pred_expr LEQ pred_expr
-            | pred_expr GT pred_expr
-            | pred_expr GEQ pred_expr
-            | pred_expr EN pred_expr
+expr <= bool.expr ;
+expr ::= comp_expr ;
+
+comp_expr ::= calc_expr EQ calc_expr
+            | calc_expr NEQ calc_expr
+            | calc_expr LT calc_expr
+            | calc_expr LEQ calc_expr
+            | calc_expr GT calc_expr
+            | calc_expr GEQ calc_expr
+            | calc_expr EN calc_expr
             ;
 
-bool_expr ::= bool_expr AND bool_expr
-          | bool_expr OR bool_expr
-          | NOT bool_expr
-          | TRUE
-          | FALSE
-          ;
-
-bool_expr_extra ::= bool_expr_extra EQUIV bool_expr_extra
-                 | bool_expr_extra IMPLY bool_expr_extra
-                 ;
+calc_expr ::= VAR
+            | NUMBER
+            | bool.LPAR calc_expr bool.RPAR
+            | calc_expr MULT calc_expr
+            | calc_expr DIV calc_expr
+            | calc_expr REM calc_expr
+            | calc_expr ADD calc_expr
+            | calc_expr SUB calc_expr
+            ;
 
 STRING    ::= '"' (~[\\"] | '\\'$)* '"' ;
 CHUNK     ::= '#' ([0-9a-fA-F] [0-9a-fA-F])* '#' ;
 NUMBER    ::= [0-9]+ ;
-TRUE      ::= 'true' ;
-FALSE     ::= 'false' ;
-MAYBE     ::= 'maybe' ;
 VAR       ::= '_'* ([a-zA-Z] | '\\'$) ([a-zA-Z0-9_'] | '\\'$)* ;
 
-LPAR  ::= '(' ;
-RPAR  ::= ')' ;
 MULT  ::= '*' ;
 DIV   ::= '/' ;
 REM   ::= '%' ;
@@ -140,8 +122,37 @@ GEQ   ::= '>=' ;
 EQ    ::= '==' ;
 NEQ   ::= '!=' ;
 EN    ::= '??' ;
+
+
+
+
+module bool;
+
+expr ::= expr AND expr
+     | expr OR expr
+     | NOT expr
+     | TRUE
+     | FALSE
+     | MAYBE
+     | LPAR expr RPAR
+     ;
+
+expr_extra ::= expr_extra EQUIV expr_extra
+           | expr_extra IMPLY expr_extra
+           ;
+
+LPAR  ::= '(' ;
+RPAR  ::= ')' ;
+TRUE      ::= 'true' ;
+FALSE     ::= 'false' ;
+MAYBE     ::= 'maybe' ;
 NOT   ::= '!' ;
 AND   ::= '&&' ;
 OR    ::= '||' ;
-EQUIV ::= '->' ;
-IMPLY ::= '<->' ;
+EQUIV ::= '<->' ;
+IMPLY ::= '->' ;
+
+NEXT ::= 'X' ;
+EXIST ::= 'E' ;
+ALL ::= 'A' ;
+UNTIL ::= 'U' ;
