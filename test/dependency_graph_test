@@ -1,6 +1,7 @@
 module a;
 using b;
 using c;
+using d;
 
 test ::= 'test' ;
 
@@ -8,4 +9,6 @@ module b;
 
 
 module c;
-using b;
+using d;
+
+module d;

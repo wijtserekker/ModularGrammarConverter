@@ -2,21 +2,21 @@ module main ;
 using ctl ;
 using ltl ;
 using mucalc ;
+using pred ;
 
 expr <= ctl.expr ;
 expr <= ltl.expr ;
 expr <= mucalc.expr ;
-
+expr <= pred.expr ;
 
 
 
 module mucalc ;
 using pred ;
 
-expr <= pred.expr ;
 expr ::= MU pred.VAR DOT expr
      | NU pred.VAR DOT expr
-     | EDGE_EXIST_LEFT pred.VAR EDGE_EXIST_RIGHT expr
+     | pred.LT pred.VAR pred.GT expr
      | EDGE_ALL_LEFT pred.VAR EDGE_ALL_RIGHT expr
      | pred.NEXT expr
      | pred.EXIST expr
@@ -25,8 +25,6 @@ expr ::= MU pred.VAR DOT expr
 
 MU ::= 'mu' ;
 NU ::= 'nu' ;
-EDGE_EXIST_LEFT  ::= '<' ;
-EDGE_EXIST_RIGHT ::= '>' ;
 EDGE_ALL_LEFT    ::= '[' ;
 EDGE_ALL_RIGHT   ::= ']' ;
 DOT   ::= '.' ;
@@ -35,37 +33,28 @@ DOT   ::= '.' ;
 
 
 module ctl ;
-using pred ;
+using pred;
 
-expr <= pred.expr ;
-expr <= pred.extra_expr ;
 expr ::= pred.EXIST expr
      | pred.ALL expr
-     | GLOBALLY expr
-     | FUTURE expr
+     | pred.GLOBALLY expr
+     | pred.FUTURE expr
      | pred.NEXT expr
      | expr pred.UNTIL expr
      ;
-
-GLOBALLY ::= 'G' ;
-FUTURE ::= 'F' ;
 
 
 module ltl ;
 using pred ;
 
-expr <= pred.expr ;
-expr <= pred.extra_expr ;
-expr ::= GLOBALLY expr
-     | FUTURE expr
+expr ::= pred.GLOBALLY expr
+     | pred.FUTURE expr
      | pred.NEXT expr
      | expr pred.UNTIL expr
      | expr WEAK_UNTIL expr
      | expr RELEASE expr
      ;
 
-GLOBALLY   ::= '[]' ;
-FUTURE     ::= '<>' ;
 WEAK_UNTIL ::= 'W' ;
 RELEASE    ::= 'R' ;
 
@@ -98,11 +87,9 @@ expr ::= VAR
      | expr AND expr
      | expr OR expr
      | NOT expr
+     | expr EQUIV expr
+     | expr IMPLY expr
      ;
-
-extra_expr ::= extra_expr EQUIV extra_expr
-           | extra_expr IMPLY extra_expr
-           ;
 
 STRING    ::= '"' (~[\\"] | '\\'$)* '"' ;
 CHUNK     ::= '#' ([0-9a-fA-F] [0-9a-fA-F])* '#' ;
@@ -132,7 +119,9 @@ OR    ::= '||' ;
 EQUIV ::= '<->' ;
 IMPLY ::= '->' ;
 
-NEXT ::= 'X' ;
-EXIST ::= 'E' ;
-ALL ::= 'A' ;
-UNTIL ::= 'U' ;
+GLOBALLY ::= '[]' ;
+FUTURE   ::= '<>' ;
+NEXT     ::= 'X' ;
+EXIST    ::= 'E' ;
+ALL      ::= 'A' ;
+UNTIL    ::= 'U' ;

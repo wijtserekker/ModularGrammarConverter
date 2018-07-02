@@ -58,12 +58,12 @@ public class Main {
 
         // Error checking
         if (grammar.getModule(mainModule) == null) {
-            System.err.println("Given main module '" + mainModule + "' does not exist!");
+            System.err.println("The given main module '" + mainModule + "' does not exist!");
             return;
         }
         if (grammar.getModule(mainModule).getGrammarRule(mainRule) == null
                 && !grammar.getModule(mainModule).containsImportRuleWithLHS(mainRule)) {
-            System.err.println("Given start non-terminal '" + mainModule + "." + mainRule + "' does not exist!");
+            System.err.println("The given start non-terminal '" + mainModule + "." + mainRule + "' does not exist!");
             return;
         }
 
@@ -99,12 +99,12 @@ public class Main {
 
         File exportFile = new File(grammarName + exportModule.getFileExtension());
         if (exportFile.exists()) {
-//            System.out.print("Export file '" + grammarName + exportModule.getFileExtension() + "' already exists! Overwrite? [y/N]: ");
-//            Scanner scanner = new Scanner(System.in);
-//            String answer = scanner.nextLine().toLowerCase();
-//            scanner.close();
-//            if (!(answer.equals("yes") || answer.equals("y") || answer.equals("ye")))
-//                return;
+            System.out.print("Export file '" + grammarName + exportModule.getFileExtension() + "' already exists! Overwrite? [y/N]: ");
+            Scanner scanner = new Scanner(System.in);
+            String answer = scanner.nextLine().toLowerCase();
+            scanner.close();
+            if (!(answer.equals("yes") || answer.equals("y") || answer.equals("ye")))
+                return;
             if (!exportFile.delete()) {
                 System.out.println("Could not overwrite export file '" + grammarName + exportModule.getFileExtension() + "'!");
                 return;

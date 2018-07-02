@@ -18,18 +18,16 @@ using bool ;
 expr <= bool.expr ;
 expr ::= MU pred.VAR DOT expr
      | NU pred.VAR DOT expr
-     | EDGE_EXIST_LEFT pred.VAR EDGE_EXIST_RIGHT expr
+     | pred.LT pred.VAR pred.GT expr
      | EDGE_ALL_LEFT pred.VAR EDGE_ALL_RIGHT expr
-     | bool.NEXT expr
-     | bool.EXIST expr
-     | bool.ALL expr
-     | pred.expr
+     | pred.NEXT expr
+     | pred.EXIST expr
+     | pred.ALL expr
+     | pred.comp_expr
      ;
 
 MU ::= 'mu' ;
 NU ::= 'nu' ;
-EDGE_EXIST_LEFT  ::= '<' ;
-EDGE_EXIST_RIGHT ::= '>' ;
 EDGE_ALL_LEFT    ::= '[' ;
 EDGE_ALL_RIGHT   ::= ']' ;
 DOT   ::= '.' ;
@@ -43,17 +41,14 @@ using pred ;
 
 expr <= bool.expr ;
 expr <= bool.expr_extra ;
-expr ::= bool.EXIST expr
-     | bool.ALL expr
-     | GLOBALLY expr
-     | FUTURE expr
-     | bool.NEXT expr
-     | expr bool.UNTIL expr
-     | pred.expr
+expr ::= pred.EXIST expr
+     | pred.ALL expr
+     | pred.GLOBALLY expr
+     | pred.FUTURE expr
+     | pred.NEXT expr
+     | expr pred.UNTIL expr
+     | pred.comp_expr
      ;
-
-GLOBALLY ::= 'G' ;
-FUTURE ::= 'F' ;
 
 
 module ltl ;
@@ -62,29 +57,21 @@ using bool ;
 
 expr <= bool.expr ;
 expr <= bool.expr_extra ;
-expr ::= GLOBALLY expr
-     | FUTURE expr
-     | bool.NEXT expr
-     | expr bool.UNTIL expr
+expr ::= pred.GLOBALLY expr
+     | pred.FUTURE expr
+     | pred.NEXT expr
+     | expr pred.UNTIL expr
      | expr WEAK_UNTIL expr
      | expr RELEASE expr
-     | pred.expr
+     | pred.comp_expr
      ;
 
-GLOBALLY   ::= '[]' ;
-FUTURE     ::= '<>' ;
 WEAK_UNTIL ::= 'W' ;
 RELEASE    ::= 'R' ;
 
 
-
-
-
 module pred ;
 using bool ;
-
-expr <= bool.expr ;
-expr ::= comp_expr ;
 
 comp_expr ::= calc_expr EQ calc_expr
             | calc_expr NEQ calc_expr
@@ -97,6 +84,8 @@ comp_expr ::= calc_expr EQ calc_expr
 
 calc_expr ::= VAR
             | NUMBER
+            | STRING
+            | CHUNK
             | bool.LPAR calc_expr bool.RPAR
             | calc_expr MULT calc_expr
             | calc_expr DIV calc_expr
@@ -123,6 +112,12 @@ EQ    ::= '==' ;
 NEQ   ::= '!=' ;
 EN    ::= '??' ;
 
+GLOBALLY   ::= '[]' ;
+FUTURE     ::= '<>' ;
+NEXT ::= 'X' ;
+EXIST ::= 'E' ;
+ALL ::= 'A' ;
+UNTIL ::= 'U' ;
 
 
 
@@ -143,16 +138,11 @@ expr_extra ::= expr_extra EQUIV expr_extra
 
 LPAR  ::= '(' ;
 RPAR  ::= ')' ;
-TRUE      ::= 'true' ;
-FALSE     ::= 'false' ;
-MAYBE     ::= 'maybe' ;
+TRUE  ::= 'true' ;
+FALSE ::= 'false' ;
+MAYBE ::= 'maybe' ;
 NOT   ::= '!' ;
 AND   ::= '&&' ;
 OR    ::= '||' ;
 EQUIV ::= '<->' ;
 IMPLY ::= '->' ;
-
-NEXT ::= 'X' ;
-EXIST ::= 'E' ;
-ALL ::= 'A' ;
-UNTIL ::= 'U' ;
