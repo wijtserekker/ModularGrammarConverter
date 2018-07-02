@@ -11,15 +11,31 @@ import java.util.HashSet;
 
 public class ImportResolver {
 
+    /**
+     * Resolves the imports of the given modular grammar in the given order. The grammar should have passed the usage
+     * checker without any errors. The grammars dependency graph must not contain any cycles. The given array of module
+     * names should only contain valid module names.
+     * @param grammar   The modular grammar.
+     * @param order     The module names in the order of which they must be handled by the import resolver.
+     * @see ImportResolver#resolveImportByCloneRecursive(Module, ModularGrammar)
+     * @see ImportResolver#resolveOtherImportRules(Module, ModularGrammar)
+     * @see ImportResolver#resolveRemoveRules(Module)
+     */
     public static void resolveImports(ModularGrammar grammar, ArrayList<String> order) {
         for (String moduleName : order) {
             Module module = grammar.getModule(moduleName);
             resolveImportByCloneRecursive(module, grammar);
             resolveOtherImportRules(module, grammar);
-            resolveRemoveRules(module, grammar);
+            resolveRemoveRules(module);
         }
     }
 
+    /**
+     * Resolves the import-by-clone-recursive rules of the given module, by generating import-by-clone rules for every
+     * non-terminal encountered in the imported productions.
+     * @param module    The module.
+     * @param grammar   The whole modular grammar.
+     */
     private static void resolveImportByCloneRecursive(Module module, ModularGrammar grammar) {
         // Get all CLONE_RECURSIVE import rules from the module
         ArrayList<ImportRule> importRules = new ArrayList<>();
@@ -46,6 +62,14 @@ public class ImportResolver {
         }
     }
 
+    /**
+     * Helper function of {@link ImportResolver#resolveImportByCloneRecursive(Module, ModularGrammar)}. Gets all the
+     * induced import-by-clone rules from importing the given non-terminal by clone recursive.
+     * @param importModule  The module name of the imported non-terminal.
+     * @param importRule    The non-terminal name of the imported non-terminal.
+     * @param grammar       The whole modular grammar.
+     * @return              A list of induced import-by-clone rules.
+     */
     private static ArrayList<ImportRule> getInducedCloneRules(String importModule, String importRule, ModularGrammar grammar) {
         // Get all the non-terminals from the rhs of the imported rule
         Module module = grammar.getModule(importModule);
@@ -72,6 +96,12 @@ public class ImportResolver {
         return result;
     }
 
+    /**
+     * Helper function of {@link ImportResolver#getInducedCloneRules(String, String, ModularGrammar)}. Gets all the
+     * non-terminals in the given production.
+     * @param rhs           The production.
+     * @param nonTermExprs  The set to which the found non-terminals are added.
+     */
     private static void getNonTermExprs(ArrayList<RHSElem> rhs, HashSet<NonTermExpr> nonTermExprs) {
         for (RHSElem rhsElem : rhs) {
             if (rhsElem instanceof NonTermExpr) {
@@ -82,6 +112,13 @@ public class ImportResolver {
         }
     }
 
+    /**
+     * Resolves the import-by-reference and import-by-clone rules of the given module.
+     * @param module    The module.
+     * @param grammar   The whole modular grammar.
+     * @see ImportResolver#resolveReferenceRule(ImportRule, Module, ModularGrammar)
+     * @see ImportResolver#resolveCloneRule(ImportRule, Module, ModularGrammar)
+     */
     private static void resolveOtherImportRules(Module module, ModularGrammar grammar) {
         for (ImportRule rule : module.getImportRules()) {
             switch (rule.getType()) {
@@ -96,6 +133,12 @@ public class ImportResolver {
         module.getImportRules().clear();
     }
 
+    /**
+     * Resolves an import-by-reference rule in the given module.
+     * @param rule      The import-by-reference rule.
+     * @param module    The module.
+     * @param grammar   The whole modular grammar.
+     */
     private static void resolveReferenceRule(ImportRule rule, Module module, ModularGrammar grammar) {
         Rule importedRule = grammar.getModule(rule.getImportModule()).getGrammarRule(rule.getImportRule());
         // Make a copy of the rightHandSides of the imported rule
@@ -112,6 +155,12 @@ public class ImportResolver {
         }
     }
 
+    /**
+     * Resolves an import-by-clone rule in the given module.
+     * @param rule      The import-by-clone rule.
+     * @param module    The module.
+     * @param grammar   The whole modular grammar.
+     */
     private static void resolveCloneRule(ImportRule rule, Module module, ModularGrammar grammar) {
         Rule importedRule = grammar.getModule(rule.getImportModule()).getGrammarRule(rule.getImportRule());
         // Make a copy of the rightHandSides of the imported rule
@@ -140,7 +189,11 @@ public class ImportResolver {
         }
     }
 
-    private static void resolveRemoveRules(Module module, ModularGrammar grammar) {
+    /**
+     * Resolves the remove-production rules from the given module.
+     * @param module    The module.
+     */
+    private static void resolveRemoveRules(Module module) {
         for (RemoveRule removeRule : module.getRemoveRules()) {
             Rule rule = module.getGrammarRule(removeRule.getLeftHandSide());
             boolean removed = rule.getRightHandSides().remove(removeRule.getRighHandSide());

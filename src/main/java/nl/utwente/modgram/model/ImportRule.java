@@ -28,6 +28,14 @@ public class ImportRule {
     private String importRule;
     private boolean induced;
 
+    /**
+     * The constructor of an import rule model.
+     * @param type          The type of import rule
+     * @param localRule     The name of the non-terminal this rule imports to
+     * @param importModule  The name of the module this rule imports from
+     * @param importRule    The name of the rule this module imports from
+     * @param induced       {@code true} if the rule was created from a import-recursive rule, else {@code false}
+     */
     public ImportRule(Type type, String localRule, String importModule, String importRule, boolean induced) {
         this.type = type;
         this.localRule = localRule;

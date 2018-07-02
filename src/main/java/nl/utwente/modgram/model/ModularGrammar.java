@@ -7,10 +7,6 @@ public class ModularGrammar {
 
     private LinkedHashMap<String, Module> modules = new LinkedHashMap<>();
 
-    public ModularGrammar() {
-
-    }
-
     public void addModule(Module module) {
         modules.put(module.getName(), module);
     }

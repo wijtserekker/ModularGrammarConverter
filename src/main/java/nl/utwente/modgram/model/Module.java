@@ -10,6 +10,10 @@ public class Module {
     private LinkedHashMap<String, Rule> grammarRules = new LinkedHashMap<>();
     private ArrayList<RemoveRule> removeRules = new ArrayList<>();
 
+    /**
+     * The constructor for the model object of a module in a modular grammar.
+     * @param name  The name of the module
+     */
     public Module(String name) {
         this.name = name;
     }

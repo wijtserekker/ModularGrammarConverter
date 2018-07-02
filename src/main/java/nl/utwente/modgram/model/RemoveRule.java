@@ -10,6 +10,11 @@ public class RemoveRule {
     private ArrayList<RHSElem> righHandSide;
 
 
+    /**
+     * The constructor of a remove rule model object.
+     * @param leftHandSide  The non-terminal name this rule removes a production from.
+     * @param righHandSide  The production the rule removes.
+     */
     public RemoveRule(String leftHandSide, ArrayList<RHSElem> righHandSide) {
         this.leftHandSide = leftHandSide;
         this.righHandSide = righHandSide;

@@ -10,6 +10,11 @@ import nl.utwente.modgram.model.rhs.*;
 
 import java.util.ArrayList;
 
+/**
+ * An ANTLR tree visitor which converts a parse tree to a modular grammar model.
+ *
+ * @see nl.utwente.modgram.model.ModularGrammar
+ */
 public class ParseToASTConverter extends ModGramBaseVisitor {
 
     @Override

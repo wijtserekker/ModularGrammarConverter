@@ -9,7 +9,20 @@ import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ * The ANTLR4 grammar export module. It converts the given modular grammar to a {@code String} which can be written to
+ * a file.
+ */
 public class ANTLR4ExportModule implements ExportModule {
+    /**
+     * Generates a {@code String} representation of the given grammar in the ANTLR4 grammar syntax. The modular grammar
+     * rules should all have been resolved in the given modular grammar.
+     * @param grammar           The modular grammar.
+     * @param moduleNames       The names of the modules that should be exported.
+     * @param reachableNonTerms The non-terminals that are reachable from the start non-terminal.
+     * @param grammarName       The name of the output grammar.
+     * @return                  The {@code String} representation of the given modular grammar in the ANTLR4 grammar syntax
+     */
     @Override
     public String exportGrammar(ModularGrammar grammar, ArrayList<String> moduleNames,
                                 HashSet<NonTermExpr> reachableNonTerms, String grammarName) {

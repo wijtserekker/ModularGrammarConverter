@@ -10,6 +10,11 @@ public class Rule {
     private String leftHandSide;
     private ArrayList<ArrayList<RHSElem>> rightHandSides;
 
+    /**
+     * The constructor of a grammar rule model object.
+     * @param leftHandSide      The non-terminal this rule specifies productions for.
+     * @param rightHandSides    The productions of the rule.
+     */
     public Rule(String leftHandSide, ArrayList<ArrayList<RHSElem>> rightHandSides) {
         this.leftHandSide = leftHandSide;
         this.rightHandSides = rightHandSides;

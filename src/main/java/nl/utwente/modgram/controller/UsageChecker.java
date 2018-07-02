@@ -12,6 +12,11 @@ public class UsageChecker {
     private ArrayList<String> errors;
     private ModularGrammar grammar;
 
+    /**
+     * Checks the usa and declaration of names in the given modular grammar.
+     * @param grammar   The modular grammar.
+     * @return          A list of usage errors.
+     */
     public ArrayList<String> checkUsageGrammar(ModularGrammar grammar) {
         this.errors = new ArrayList<>();
         this.grammar = grammar;

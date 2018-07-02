@@ -7,7 +7,6 @@ import nl.utwente.modgram.controller.export.ExportModule;
 import nl.utwente.modgram.misc.ReachabilityChecker;
 import nl.utwente.modgram.model.ModularGrammar;
 import nl.utwente.modgram.model.Module;
-import nl.utwente.modgram.model.rhs.NonTermExpr;
 import org.antlr.v4.misc.Graph;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -80,7 +79,7 @@ public class Main {
         Graph<String> dependencyGraph = DependencyGraphBuilder.buildDependencyGraph(grammar);
 
         // Error checking (Is dependency graph cyclic?)
-        if (DependencyGraphBuilder.graphIsCyclic(dependencyGraph, dependencyGraph.getNode(mainModule))) {
+        if (DependencyGraphBuilder.graphIsCyclic(dependencyGraph.getNode(mainModule))) {
             System.err.println("The specified grammar contains cyclic module dependencies! This is not supported.");
             return;
         }
